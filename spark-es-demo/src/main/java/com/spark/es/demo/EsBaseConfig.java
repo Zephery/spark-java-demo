@@ -15,7 +15,7 @@ public abstract class EsBaseConfig {
                 .set("es.nodes.wan.only", "true")
                 .set("es.net.http.auth.user", "elastic")
                 .set("es.net.http.auth.pass", "elastic-admin")
-                .setMaster("local");
+                .setMaster("local[*]");
         return sparkConf;
     }
 }
