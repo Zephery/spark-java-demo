@@ -1,13 +1,7 @@
-FROM openjdk:11
+FROM gcr.io/spark-operator/spark:v3.1.1
 
-COPY ./target/*.jar /app.jar
+COPY spark-es-demo/target/*.jar /opt/spark/examples/jars/app.jar
 
 ENV TZ='Asia/Shanghai'
-ENV JAVA_OPTS=" -Xms2048m -Xmx2048m "
-ENV ACTIVE="test"
 
-EXPOSE ${SERVER_PORT}
-
-WORKDIR /data/logs/backend-checker
-
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=$ACTIVE -jar /app.jar "  ]
+CMD ["java","-jar","/opt/spark/examples/jars/app.jar"]
