@@ -88,7 +88,6 @@ public class SimpleWordCount {
         SparkSession spark = SparkSession
                 .builder()
                 .appName("JavaLogQuery")
-                .master("local")
                 .getOrCreate();
 
         try (JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext())) {
