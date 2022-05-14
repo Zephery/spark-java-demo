@@ -1,6 +1,6 @@
 FROM gcr.io/spark-operator/spark:v3.1.1
 
-COPY spark-es-demo/target/*.jar /opt/spark/examples/jars/app.jar
+COPY spark-k8s-demo/target/*.jar /opt/spark/examples/jars/app.jar
 
 ENV TZ='Asia/Shanghai'
 
