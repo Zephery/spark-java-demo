@@ -103,7 +103,7 @@
                     <archive>
                         <manifest>
                             <!-- 此处指定main方法入口的class -->
-                            <mainClass>com.spark.es.demo.SimpleWordCount</mainClass>
+                            <mainClass>com.spark.es.demo.EsReadGroupByName</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
