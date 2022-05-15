@@ -15,6 +15,10 @@ public abstract class EsBaseConfig {
                 .set("es.nodes.wan.only", "true")
                 .set("es.net.http.auth.user", "elastic")
                 .set("es.net.http.auth.pass", "elastic-admin")
+                //去掉这三个字段，否则查询会报错
+                .set("es.mapping.exclude","geo.*,geoip.location")
+                .set("es.read.field.exclude","geo.*,geoip.location")
+                .set("es.read.field.as.array.exclude","geo*,geoip.location")
                 .setMaster("local[*]");
         return sparkConf;
     }

@@ -1,11 +1,11 @@
 package com.spark.es.demo;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.elasticsearch.spark.sql.EsSparkSQL;
 
 /**
  * @author wenzhihuai
@@ -13,6 +13,8 @@ import org.elasticsearch.spark.sql.EsSparkSQL;
  */
 @Slf4j
 public class EsSparkSqlDemo extends EsBaseConfig {
+
+
     public static void main(String[] args) {
         SparkConf sparkConf = getSparkConf();
 
@@ -20,7 +22,8 @@ public class EsSparkSqlDemo extends EsBaseConfig {
         SparkSession sparkSession = SparkSession.builder()
                 .config(sparkConf)
                 .getOrCreate();
-        Dataset<Row> rowDataset = EsSparkSQL.esDF(sparkSession, "micrometer-metrics*");
+        sparkSession.table("kibana_sample_data_ecommerce");
+        Dataset<Row> sql = sparkSession.sql("select * from kibana_sample_data_ecommerce");
         log.info("");
     }
 }
