@@ -16,7 +16,7 @@ import java.util.Map;
 public class KafkaProduce {
     @Test
     public void send() {
-        String brokers = "";
+        String brokers = "106.52.188.206:30437";
 
         Map<String, Object> kafkaParams = new HashMap<>();
         kafkaParams.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);

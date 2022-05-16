@@ -57,7 +57,7 @@ public final class JavaDirectKafkaWordCount {
 
     public static void main(String[] args) throws Exception {
 
-        String brokers = "";
+        String brokers = "106.52.188.206:30437";
         String groupId = "kafka-streaming-test";
         String topics = "kafka-streaming-test";
 
