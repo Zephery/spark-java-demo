@@ -1,6 +1,5 @@
 package com.spark.es.demo;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Dataset;
