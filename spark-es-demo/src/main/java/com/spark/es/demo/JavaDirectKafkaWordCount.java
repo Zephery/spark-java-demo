@@ -29,6 +29,7 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
+import org.elasticsearch.spark.streaming.api.java.JavaEsSparkStreaming;
 import scala.Tuple2;
 
 import java.util.Arrays;
@@ -80,7 +81,11 @@ public final class JavaDirectKafkaWordCount {
 
         // Get the lines, split them into words, count the words and print
         JavaDStream<String> lines = messages.map(ConsumerRecord::value);
-        JavaDStream<String> words = lines.flatMap(x -> Arrays.asList(SPACE.split(x)).iterator());
+        JavaDStream<String> words = lines.map(x -> "{\"test\":\"" + x + "\"}");
+        words.print();
+
+        JavaEsSparkStreaming.saveJsonToEs(words, "kafka-spark-streaming-es");
+
         JavaPairDStream<String, Integer> wordCounts = words.mapToPair(s -> new Tuple2<>(s, 1))
                 .reduceByKey(Integer::sum);
         wordCounts.print();

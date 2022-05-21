@@ -13,7 +13,7 @@ import java.util.Map;
  * @author wenzhihuai
  * @since 2022/5/15 20:52
  */
-public class KafkaProduce {
+public class KafkaSendTest {
     @Test
     public void send() {
         String brokers = "106.52.188.206:30437";
