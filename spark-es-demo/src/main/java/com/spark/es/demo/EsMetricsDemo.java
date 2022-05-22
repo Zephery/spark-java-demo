@@ -26,7 +26,7 @@ public class EsMetricsDemo {
             SparkSession sparkSession = SparkSession.builder()
                     .config(conf)
                     .getOrCreate();
-            JavaRDD<Map<String, Object>> esRDD = JavaEsSpark.esRDD(jsc, "micrometer-metrics-2022-05-21").values();
+            JavaRDD<Map<String, Object>> esRDD = JavaEsSpark.esRDD(jsc, "micrometer-metrics-2022-05-22").values();
             JavaRDD<Row> map = esRDD.filter(v -> v.containsKey("uri")).map(v -> {
                 String uri = v.get("uri").toString();
                 Double max = Double.parseDouble(v.get("max").toString());
@@ -37,7 +37,7 @@ public class EsMetricsDemo {
             Dataset<Row> dataset = sparkSession.createDataFrame(map, StructType.fromDDL("uri string,max double"));
 //            dataset.show(2);
 
-            Dataset<Row> count = dataset.select("uri").groupBy("uri").count().orderBy("count");
+            Dataset<Row> count = dataset.select("uri").groupBy("uri").count();
             count.show();
 
 
