@@ -1,15 +1,19 @@
 package com.spark.es.demo;
 
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.streaming.StreamingQuery;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.streaming.StreamingQueryException;
+import org.apache.spark.streaming.Seconds;
+import org.apache.spark.streaming.api.java.JavaDStream;
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.elasticsearch.spark.streaming.api.java.JavaEsSparkStreaming;
+import org.sparkproject.guava.collect.ImmutableList;
+import org.sparkproject.guava.collect.ImmutableMap;
 
-import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -19,26 +23,19 @@ import java.util.concurrent.TimeoutException;
 public class EsSparkStreaming extends EsBaseConfig {
     public static void main(String[] args) throws StreamingQueryException, TimeoutException {
         SparkConf conf = getSparkConf();
-        SparkSession sparkSession = SparkSession.builder().config(conf).getOrCreate();
-        Dataset<Row> lines = sparkSession
-                .readStream()
-                .format("socket")
-                .option("host", "localhost")
-                .option("port", 9999)
-                .load();
+        JavaSparkContext jsc = new JavaSparkContext(conf);
+        JavaStreamingContext jssc = new JavaStreamingContext(jsc, Seconds.apply(1));
 
-// Split the lines into words
-        Dataset<String> words = lines
-                .as(Encoders.STRING())
-                .flatMap((FlatMapFunction<String, String>) x -> Arrays.asList(x.split(" ")).iterator(), Encoders.STRING());
+        Map<String, ?> numbers = ImmutableMap.of("one", 1, "two", 2);
+        Map<String, ?> airports = ImmutableMap.of("OTP", "Otopeni", "SFO", "San Fran");
 
-// Generate running word count
-        Dataset<Row> wordCounts = words.groupBy("value").count();
-        StreamingQuery query = wordCounts.writeStream()
-                .outputMode("complete")
-                .format("console")
-                .start();
+        JavaRDD<Map<String, ?>> javaRDD = jsc.parallelize(ImmutableList.of(numbers, airports));
+        Queue<JavaRDD<Map<String, ?>>> microbatches = new LinkedList<>();
+        microbatches.add(javaRDD);
+        JavaDStream<Map<String, ?>> javaDStream = jssc.queueStream(microbatches);
 
-        query.awaitTermination();
+        JavaEsSparkStreaming.saveToEs(javaDStream, "spark-streaming");
+
+        jssc.start();
     }
 }
