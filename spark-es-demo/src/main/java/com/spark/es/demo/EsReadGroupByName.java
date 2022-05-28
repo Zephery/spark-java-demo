@@ -6,6 +6,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zepherywen
@@ -27,7 +28,10 @@ public class EsReadGroupByName {
             esRDD.map(x -> x.get("customer_full_name"))
                     .countByValue()
                     .forEach((x, y) -> System.out.println(x + ":" + y));
+            TimeUnit.HOURS.sleep(1);
 
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
