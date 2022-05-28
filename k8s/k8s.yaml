@@ -6,7 +6,7 @@ metadata:
 spec:
   type: Scala
   mode: cluster
-  image: fewfew-docker.pkg.coding.net/spark-java-demo/spark-java-demo-new/spark-java-demo:master-4c88dc2ae92c2e19d394430233c82721f15901b0
+  image: fewfew-docker.pkg.coding.net/spark-java-demo/spark-java-demo-new/spark-java-demo:master-1d8c164bced70a1c66837ea5c0180c61dfb48ac3
   imagePullPolicy: Always
   mainClass: com.spark.es.demo.EsReadGroupByName
   mainApplicationFile: "local:///opt/spark/examples/jars/app.jar"
@@ -14,14 +14,16 @@ spec:
   restartPolicy:
     type: Never
   driver:
-    cores: 1
+    # 用cores必须要大于等于1，这里用coreRequest
+    coreRequest: "100m"
     coreLimit: "1200m"
     memory: "512m"
     labels:
       version: 3.1.1
-    serviceAccount: spark
+    serviceAccount: sparkoperator
   executor:
-    cores: 1
+    # 用cores必须要大于等于1，这里用coreRequest
+    coreRequest: "100m"
     instances: 1
     memory: "512m"
     labels:
