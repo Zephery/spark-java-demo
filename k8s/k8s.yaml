@@ -20,6 +20,7 @@ spec:
     memory: "512m"
     labels:
       version: 3.1.1
+    # 这里的serviceAccount需要调用rbac.yaml
     serviceAccount: sparkoperator
   executor:
     # 用cores必须要大于等于1，这里用coreRequest
